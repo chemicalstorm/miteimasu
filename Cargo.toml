@@ -1,0 +1,13 @@
+[package]
+name = "miteimasu"
+version = "0.1.0"
+authors = ["Audric Schiltknecht <storm@chemicalstorm.org>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+config = "0.9"
+serde = { version = "1.0.116", features = ["derive"] }
+log = "0.4.11"
+flexi_logger = "0.15.12"
