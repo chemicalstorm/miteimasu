@@ -1,23 +1,36 @@
-mod settings;
-
 use flexi_logger::Logger;
-use log::{debug, error, info, trace, warn};
+
 use settings::Settings;
 
-fn main() {
-    println!("Hello, world!");
+mod rest;
+mod settings;
 
+#[tokio::main]
+async fn main() {
     let settings = Settings::new().unwrap();
 
-    Logger::with_str(settings.miteimasu.log.level)
+    Logger::with_str(&settings.miteimasu.log.level)
         .start()
         .unwrap_or_else(|e| panic!("Logger initialization failed with {}", e));
 
-    trace!("Test trace");
-    debug!("Test debug");
-    info!("Test info");
-    warn!("Test warn");
-    error!("Test error");
+    log::info!("Welcome to 見ています");
+    log::debug!("Configuration: {:?}", settings);
 
-    info!("Welcome to 見て います");
+    let address = (
+        settings.miteimasu.server.address,
+        settings.miteimasu.server.port,
+    );
+
+    let shutdown = async {
+        tokio::signal::ctrl_c()
+            .await
+            .expect("failed to install CTRL+C signal handler");
+    };
+
+    let (_, server) =
+        warp::serve(rest::routes(settings)).bind_with_graceful_shutdown(address, shutdown);
+
+    tokio::select! {
+            _ = server => {},
+    }
 }

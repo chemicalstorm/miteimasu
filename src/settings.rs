@@ -1,19 +1,36 @@
-use config::{Config, ConfigError};
-use serde::Deserialize;
+use std::net::IpAddr;
 
-#[derive(Debug, Deserialize)]
+use config::{Config, ConfigError};
+use serde::{Deserialize, Serialize};
+use url::Url;
+
+#[derive(Debug, Clone, Deserialize)]
 pub struct Miteimasu {
     pub log: Log,
+    pub server: Server,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Clone, Deserialize)]
 pub struct Log {
     pub level: String,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Clone, Deserialize)]
+pub struct Server {
+    pub port: u16,
+    pub address: IpAddr,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Camera {
+    pub name: String,
+    pub url: Url,
+}
+
+#[derive(Debug, Clone, Deserialize)]
 pub struct Settings {
     pub miteimasu: Miteimasu,
+    pub cameras: Vec<Camera>,
 }
 
 impl Settings {

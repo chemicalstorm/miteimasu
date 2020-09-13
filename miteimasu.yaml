@@ -1,3 +1,10 @@
 miteimasu:
   log:
     level: debug
+  server:
+    address: ::1
+    port: 3030
+
+cameras:
+  - name: Camera 1
+    url: rtsp://192.168.5.22:8554/unicast
